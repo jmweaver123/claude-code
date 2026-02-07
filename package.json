@@ -1,0 +1,11 @@
+{
+  "name": "compass365-homepage",
+  "version": "1.0.0",
+  "description": "Homepage for Compass365.com - Microsoft 365 Consulting & Solutions",
+  "scripts": {
+    "start": "npx serve .",
+    "dev": "npx serve . --cors"
+  },
+  "license": "UNLICENSED",
+  "private": true
+}

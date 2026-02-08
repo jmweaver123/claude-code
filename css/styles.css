@@ -173,21 +173,12 @@ img {
 .nav__logo {
   display: flex;
   align-items: center;
-  gap: 0.625rem;
-  font-size: 1.25rem;
-  font-weight: 400;
-  color: var(--color-text);
-  letter-spacing: -0.02em;
+  flex-shrink: 0;
 }
 
-.nav__logo strong {
-  font-weight: 800;
-}
-
-.nav__logo-icon {
-  width: 32px;
-  height: 32px;
-  color: var(--color-primary);
+.nav__logo-svg {
+  height: 36px;
+  width: auto;
 }
 
 .nav__menu {

@@ -9,33 +9,71 @@ document.addEventListener('DOMContentLoaded', () => {
   initContactForm();
 });
 
-/* --- Mobile Navigation --- */
+/* --- Navigation & Mega Menu --- */
 function initNavigation() {
   const toggle = document.getElementById('nav-toggle');
   const menu = document.getElementById('nav-menu');
+  const dropdownItems = document.querySelectorAll('.nav__item--has-dropdown');
 
   if (!toggle || !menu) return;
 
+  // Mobile hamburger toggle
   toggle.addEventListener('click', () => {
     toggle.classList.toggle('nav__toggle--active');
     menu.classList.toggle('nav__menu--active');
+    // Close all open dropdowns when closing menu
+    if (!menu.classList.contains('nav__menu--active')) {
+      dropdownItems.forEach(item => item.classList.remove('nav__item--active'));
+    }
   });
 
-  // Close menu when a link is clicked
-  menu.querySelectorAll('.nav__link').forEach(link => {
-    link.addEventListener('click', () => {
-      toggle.classList.remove('nav__toggle--active');
-      menu.classList.remove('nav__menu--active');
+  // Dropdown toggle on click (for mobile and keyboard accessibility)
+  dropdownItems.forEach(item => {
+    const link = item.querySelector(':scope > .nav__link');
+    link.addEventListener('click', (e) => {
+      // On mobile, always toggle dropdown. On desktop, allow navigation if no href="#"
+      if (isMobile() || link.getAttribute('href') === '#') {
+        e.preventDefault();
+        const isActive = item.classList.contains('nav__item--active');
+        // Close sibling dropdowns
+        dropdownItems.forEach(sibling => {
+          if (sibling !== item) sibling.classList.remove('nav__item--active');
+        });
+        item.classList.toggle('nav__item--active', !isActive);
+      }
     });
   });
 
-  // Close menu when clicking outside
+  // Close menu when a mega-menu link is clicked
+  menu.querySelectorAll('.mega-menu__link, .nav__item:not(.nav__item--has-dropdown) .nav__link').forEach(link => {
+    link.addEventListener('click', () => {
+      toggle.classList.remove('nav__toggle--active');
+      menu.classList.remove('nav__menu--active');
+      dropdownItems.forEach(item => item.classList.remove('nav__item--active'));
+    });
+  });
+
+  // Close menu and dropdowns when clicking outside
   document.addEventListener('click', (e) => {
     if (!toggle.contains(e.target) && !menu.contains(e.target)) {
       toggle.classList.remove('nav__toggle--active');
       menu.classList.remove('nav__menu--active');
+      dropdownItems.forEach(item => item.classList.remove('nav__item--active'));
     }
   });
+
+  // Close mega menus on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      dropdownItems.forEach(item => item.classList.remove('nav__item--active'));
+      toggle.classList.remove('nav__toggle--active');
+      menu.classList.remove('nav__menu--active');
+    }
+  });
+}
+
+function isMobile() {
+  return window.innerWidth <= 768;
 }
 
 /* --- Scroll Effects --- */
